@@ -1,51 +1,37 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.options import Options
-import os
+from selenium.webdriver.firefox.service import Service
+import time
 
 # Replace with the path to your geckodriver executable
 geckodriver_path = '/usr/local/bin/geckodriver'
-
-# Fetching credentials from environment variables
-email = os.getenv('FB_EMAIL')
-password = os.getenv('FB_PASSWORD')
-
-# Setting up Firefox options for headless mode (uncomment if you're running in an environment without a GUI)
-firefox_options = Options()
-firefox_options.headless = True
+service = Service(executable_path=geckodriver_path)
 
 # Create a new instance of the Firefox driver
-driver = webdriver.Firefox(options=firefox_options, executable_path=geckodriver_path)
+driver = webdriver.Firefox(service=service)
 
-try:
-    # Open Facebook login page
-    driver.get('https://www.facebook.com/')
+# Open Facebook login page
+driver.get('https://www.facebook.com/')
 
-    # Find the email and password input fields and enter your login credentials
-    email_field = driver.find_element(By.ID, 'email')
-    password_field = driver.find_element(By.ID, 'pass')
+# Find the email and password input fields and enter your login credentials
+email_field = driver.find_element('id', 'email')
+password_field = driver.find_element('id', 'pass')
 
-    email_field.send_keys(email)
-    password_field.send_keys(password)
+email_field.send_keys('your_facebook_email@example.com')
+password_field.send_keys('your_facebook_password')
 
-    # Submit the login form
-    password_field.send_keys(Keys.RETURN)
+# Submit the login form
+password_field.send_keys(Keys.RETURN)
 
-    # Using WebDriverWait to wait for the logout button to be visible
-    wait = WebDriverWait(driver, 10)
-    logout_button = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@aria-label='Account']")))
+# Wait for a few seconds to allow the login process to complete
+time.sleep(5)
 
-    # Verify if login was successful
-    if logout_button.is_displayed():
-        print("Login successful!")
-    else:
-        print("Login failed!")
+# Verify if login was successful by checking for the presence of the logout button
+logout_button = driver.find_element('xpath', "//div[@aria-label='Account']")
+if logout_button.is_displayed():
+    print("Login successful!")
+else:
+    print("Login failed!")
 
-except Exception as e:
-    print(f"An error occurred: {e}")
-finally:
-    # Close the browser window
-    driver.quit()
+# Close the browser window
+driver.quit()
