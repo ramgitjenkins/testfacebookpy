@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
+import time
 
 # Set the path to geckodriver (replace with your actual path)
 geckodriver_path = '/usr/local/bin/geckodriver'
