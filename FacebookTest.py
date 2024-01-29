@@ -1,14 +1,18 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.service import Service
-import time
+from selenium.webdriver.firefox.options import Options
 
-# Replace with the path to your geckodriver executable
+# Set the path to geckodriver (replace with your actual path)
 geckodriver_path = '/usr/local/bin/geckodriver'
-service = Service(executable_path=geckodriver_path)
+
+# Create Firefox options
+firefox_options = Options()
+
+# Set the binary location of Firefox
+firefox_options.binary_location = '/usr/bin/firefox'  # Update this path as needed
 
 # Create a new instance of the Firefox driver
-driver = webdriver.Firefox(service=service)
+driver = webdriver.Firefox(executable_path=geckodriver_path, options=firefox_options)
 
 # Open Facebook login page
 driver.get('https://www.facebook.com/')
